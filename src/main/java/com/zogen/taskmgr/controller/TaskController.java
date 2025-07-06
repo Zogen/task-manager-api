@@ -1,6 +1,11 @@
 package com.zogen.taskmgr.controller;
 
+import com.zogen.taskmgr.dto.TaskRequestDTO;
+import com.zogen.taskmgr.dto.TaskResponseDTO;
+import com.zogen.taskmgr.exception.TaskNotFoundException;
+import com.zogen.taskmgr.mapper.TaskMapper;
 import com.zogen.taskmgr.model.Task;
+import com.zogen.taskmgr.model.TaskStatus;
 import com.zogen.taskmgr.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     private final TaskService taskService;
@@ -19,11 +24,10 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.create(task);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdTask);
+    public TaskResponseDTO createTask(@RequestBody TaskRequestDTO requestDTO) {
+        Task task = TaskMapper.toEntity(requestDTO);
+        Task saved = taskService.create(task);
+        return TaskMapper.toResponse(saved);
     }
 
     @GetMapping
@@ -35,7 +39,12 @@ public class TaskController {
     @GetMapping("/{id}")
     public Task getTaskById(@PathVariable int id) {
         return taskService.findById(id)
-                .orElse(null); // .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + id));
+                .orElseThrow(() -> new TaskNotFoundException(id));
+    }
+
+    @GetMapping("/status/{status}")
+    public List<Task> getTaskByStatus(@PathVariable TaskStatus status) {
+        return taskService.findByStatus(status);
     }
 
     @PutMapping("/{id}")

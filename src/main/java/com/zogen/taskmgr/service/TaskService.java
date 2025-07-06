@@ -1,6 +1,7 @@
 package com.zogen.taskmgr.service;
 
 import com.zogen.taskmgr.model.Task;
+import com.zogen.taskmgr.model.TaskStatus;
 import com.zogen.taskmgr.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -26,6 +27,8 @@ public class TaskService {
     public Optional<Task> findById(int id) {
         return taskRepository.findById(id);
     }
+
+    public List<Task> findByStatus(TaskStatus status) { return taskRepository.findByStatus(status); }
 
     public Task update(int id, Task updatedTask) {
         Task existingTask = taskRepository.findById(id)
