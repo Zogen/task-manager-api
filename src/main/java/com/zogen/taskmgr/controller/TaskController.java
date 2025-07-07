@@ -7,6 +7,7 @@ import com.zogen.taskmgr.mapper.TaskMapper;
 import com.zogen.taskmgr.model.Task;
 import com.zogen.taskmgr.model.TaskStatus;
 import com.zogen.taskmgr.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskResponseDTO createTask(@RequestBody TaskRequestDTO requestDTO) {
+    public TaskResponseDTO createTask(@Valid @RequestBody TaskRequestDTO requestDTO) {
         Task task = TaskMapper.toEntity(requestDTO);
         Task saved = taskService.create(task);
         return TaskMapper.toResponse(saved);
