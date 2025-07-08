@@ -8,10 +8,13 @@ import com.zogen.taskmgr.model.Task;
 import com.zogen.taskmgr.model.TaskStatus;
 import com.zogen.taskmgr.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -57,6 +60,14 @@ public class TaskController {
     public ResponseEntity<Void> deleteTask(@PathVariable int id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/filter")
+    public List<TaskResponseDTO> filterTasks(
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) @DateTimeFormat LocalDate dueBefore
+    ) {
+        return taskService.filterTasks(status, dueBefore).stream().map(TaskMapper::toResponse).toList();
     }
 }
 

@@ -3,7 +3,9 @@ package com.zogen.taskmgr.mapper;
 import com.zogen.taskmgr.dto.TaskRequestDTO;
 import com.zogen.taskmgr.dto.TaskResponseDTO;
 import com.zogen.taskmgr.model.Task;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TaskMapper {
     public static TaskResponseDTO toResponse(Task task) {
         TaskResponseDTO dto = new TaskResponseDTO();
